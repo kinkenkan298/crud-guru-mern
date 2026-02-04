@@ -1,11 +1,11 @@
 import cors from "cors";
 import express from "express";
 import { db } from "./db";
-import { logger } from "./logger";
+import { requestLogger } from "./logger";
 
 const app = express();
 
-app.use(logger);
+app.use(requestLogger);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
