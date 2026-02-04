@@ -43,23 +43,30 @@ const logger: Logger = pino({
 const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
 
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    const logData = {
+  logger.info(
+    {
       method: req.method,
       url: req.url,
-      status: res.statusCode,
-      duration: `${duration}ms`,
-      ip: req.ip || req.connection.remoteAddress,
+      ip: req.ip,
       userAgent: req.headers["user-agent"],
-    };
-    if (res.statusCode >= 500) {
-      logger.error(logData, "Server Error");
-    } else if (res.statusCode >= 400) {
-      logger.warn(logData, "Client Error");
-    } else {
-      logger.info(logData, "Request completed");
-    }
+    },
+    "Request received",
+  );
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const logLevel = res.statusCode >= 400 ? "warn" : "info";
+
+    logger[logLevel](
+      {
+        method: req.method,
+        url: req.url,
+        status: res.statusCode,
+        duration: `${duration}ms`,
+        contentLength: res.get("Content-Length") || "0",
+      },
+      "Response sent",
+    );
   });
 
   next();
@@ -101,4 +108,40 @@ const dbLogger = {
   },
 };
 
-export { dbLogger, errorLogger, logger, requestLogger };
+const logBodyRequests = (req: Request, res: Response, next: NextFunction) => {
+  if (process.env.NODE_ENV === "development") {
+    if (req.body && Object.keys(req.body).length > 0) {
+      logger.debug(
+        {
+          body: req.body,
+        },
+        "Body parameters",
+      );
+    }
+  }
+  next();
+};
+
+const logQueryParams = (req: Request, res: Response, next: NextFunction) => {
+  if (process.env.NODE_ENV === "development") {
+    if (Object.keys(req.query).length > 0) {
+      logger.debug(
+        {
+          query: req.query,
+        },
+        "Query parameters",
+      );
+    }
+  }
+  next();
+};
+
+export {
+  dbLogger,
+  errorLogger,
+  logBodyRequests,
+  logger,
+  logQueryParams,
+  requestLogger
+};
+

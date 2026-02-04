@@ -26,7 +26,13 @@ teacherRoutes.post(
   "/",
   asyncHandler(async (req: Request, res: Response) => {
     logger.info("Request Create Teacher");
-    logger.info(req.body);
+    successResponse({
+      res,
+      data: req.body,
+      message: "Teacher created successfully",
+      statusCode: 201,
+      type: MessageType.SUCCESS,
+    });
   }),
 );
 
