@@ -10,10 +10,10 @@ export interface APIResponse<T = unknown> {
   res: Response;
   success?: boolean;
   message?: string;
-  error?: string;
+  errors?: string[];
   data: T;
   statusCode: number;
-  type: MessageType;
+  type?: MessageType;
 }
 
 const successResponse = <T>({
@@ -31,16 +31,18 @@ const successResponse = <T>({
     type,
   } as APIResponse<T>);
 };
-const errorResponse = <T>(
-  res: Response,
-  message: string,
-  data: T,
+const errorResponse = <T>({
+  res,
+  message,
+  data,
+  errors,
   statusCode = 500,
   type = MessageType.ERROR,
-) => {
+}: APIResponse<T>) => {
   return res.status(statusCode).json({
     success: false,
     message,
+    errors,
     data,
     type,
   } as APIResponse<T>);

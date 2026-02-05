@@ -2,7 +2,11 @@ import cors from "cors";
 import express from "express";
 import { teacherRoutes } from "routes/teacher.routes";
 import { db } from "./db";
-import { logBodyRequests, logQueryParams, requestLogger } from "./logger";
+import {
+  logBodyRequests,
+  logQueryParams,
+  requestLogger
+} from "./logger";
 
 const app = express();
 
