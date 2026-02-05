@@ -69,10 +69,18 @@ class TeacherService {
     }
   }
 
-  async deleteTeacher(_id: string): Promise<Teacher | null> {
+  async deleteTeacher(nip: number): Promise<Teacher | null> {
     logger.info("Delete Teacher");
     try {
-      const deletedTeacher = await TeacherModel.findOneAndDelete({ _id });
+
+      const existsTeacher = await TeacherModel.findOne({ nip });
+      if (!existsTeacher) {
+        logger.warn("Teacher not found");
+        throw new HttpException(404, "Teacher not found");
+      }
+
+      const deletedTeacher = await TeacherModel.findOneAndDelete({ nip });
+
       logger.info("Delete Teacher Success");
       return deletedTeacher;
     } catch (error) {

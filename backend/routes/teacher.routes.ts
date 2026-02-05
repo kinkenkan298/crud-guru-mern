@@ -103,4 +103,36 @@ teacherRoutes.put(
   }),
 );
 
+teacherRoutes.delete(
+  "/:nip",
+  asyncHandler(async (req: Request, res: Response) => {
+    const nip = Number(req.params.nip);
+
+    const deletedTeacher = await teacherService.deleteTeacher(nip);
+
+    successResponse({
+      res,
+      data: deletedTeacher,
+      message: "Teacher deleted successfully",
+      statusCode: 200,
+    });
+  }),
+);
+
+teacherRoutes.get(
+  "/:nip",
+  asyncHandler(async (req: Request, res: Response) => {
+    const nip = Number(req.params.nip);
+
+    const teacher = await teacherService.getTeacherByNip(nip);
+
+    successResponse({
+      res,
+      data: teacher,
+      message: "Teacher retrieved successfully",
+      statusCode: 200,
+    });
+  }),
+);
+
 export { teacherRoutes };
