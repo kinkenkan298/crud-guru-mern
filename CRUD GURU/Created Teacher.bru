@@ -5,24 +5,20 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/teachers
+  url: {{base_url}}/teachers
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "nip": "123458",
-    "name": "Rahmat Muttaqin",
-    "email": "rahmat@email.com",
+    "nip": 123433,
+    "name": "Sabil Gerung",
+    "email": "sabil22@email.com",
     "tempat_lahir": "Bandung",
     "agama": "ISLAM",
     "jenis_kelamin": "MALE"
   }
-}
-
-vars:pre-request {
-  baseUrl: http://localhost:3001/v1
 }
 
 settings {

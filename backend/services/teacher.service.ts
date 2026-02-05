@@ -1,8 +1,7 @@
 import { logger } from "logger";
 import { HttpException } from "utils/httpException";
-import z, { ZodError } from "zod";
 import { TeacherModel } from "../models/teacherModel";
-import { Agama, Gender, type Teacher } from "../types/teacher-type";
+import { type Teacher } from "../types/teacher-type";
 
 class TeacherService {
   async getAllTeachers(): Promise<Teacher[]> {
@@ -32,24 +31,6 @@ class TeacherService {
   async createTeacher(teacher: Teacher): Promise<Teacher> {
     logger.info("Create Teacher");
     try {
-      const teacherSchema = z.object({
-        nip: z.number("NIP Tidak valid").min(6, "NIP Minimal 6 angka"),
-        name: z.string({
-          error: "Wajib menggunakan huruf",
-        }),
-        email: z.email("Email tidak valid"),
-        tempat_lahir: z.string(),
-        jenis_kelamin: z.enum(Gender),
-        agama: z.enum(Agama),
-      });
-
-      const validatedTeacher = teacherSchema.safeParse(teacher);
-
-      if (!validatedTeacher.success) {
-        logger.error("Request Create Teacher Failed");
-        throw new ZodError(validatedTeacher.error.issues);
-      }
-
       const existsTeacher = await TeacherModel.findOne({ nip: teacher.nip });
       if (existsTeacher) {
         logger.warn("Teacher already exists");
@@ -77,8 +58,8 @@ class TeacherService {
         teacher,
         {
           new: true,
-          upsert: true,
-        },
+          runValidators: true,
+        }
       );
       logger.info("Update Teacher Success");
       return updatedTeacher;
