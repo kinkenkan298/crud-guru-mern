@@ -1,12 +1,9 @@
 import cors from "cors";
 import express from "express";
+import { errorHandler } from "middlewares/errorHandler";
 import { teacherRoutes } from "routes/teacher.routes";
 import { db } from "./db";
-import {
-  logBodyRequests,
-  logQueryParams,
-  requestLogger
-} from "./logger";
+import { logBodyRequests, logQueryParams, requestLogger } from "./logger";
 
 const app = express();
 
@@ -22,6 +19,8 @@ app.use(cors());
 await db();
 
 app.use("/v1/teachers", teacherRoutes);
+
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

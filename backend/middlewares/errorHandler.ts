@@ -5,7 +5,7 @@ import { errorResponse, MessageType } from "../utils/apiResponse";
 import { HttpException } from "../utils/httpException";
 
 export const errorHandler = (
-  err: Error | HttpException,
+  err: Error | HttpException | ZodError,
   req: Request,
   res: Response,
   next: NextFunction,
@@ -25,7 +25,6 @@ export const errorHandler = (
     const errors = err.issues.map((error) => ({
       field: error.path.join("."),
       message: error.message,
-      code: error.code,
     }));
     logger.error({
       error: err.message,
