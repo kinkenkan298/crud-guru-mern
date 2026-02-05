@@ -1,17 +1,32 @@
+import { routerWithQueryClient } from '@tanstack/react-router-with-query'
 import { createRouter } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
 
-// Import the generated route tree
 import { routeTree } from './routeTree.gen'
+import { DefaultCatchBoundry } from './components/defaul-catch-boundry'
+import { NotFound } from './components/not-found'
 
-// Create a new router instance
 export const getRouter = () => {
-  const router = createRouter({
-    routeTree,
-    context: {},
-
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
+  const queryClient: QueryClient = new QueryClient({
+    defaultOptions: {
+         queries: {
+           staleTime: 60 * 1000,
+           gcTime: 60 * 1000 * 10,
+           refetchOnWindowFocus: false,
+           retry: 0,
+         },
+       },
   })
+  const router = routerWithQueryClient(createRouter({
+    routeTree,
+       defaultPreload: "intent",
+       defaultPreloadStaleTime: 0,
+       defaultStructuralSharing: true,
+       scrollRestoration: true,
+       defaultErrorComponent: DefaultCatchBoundry,
+       defaultNotFoundComponent: () => <NotFound />,
+       context: { queryClient },
+  }), queryClient)
 
   return router
 }
