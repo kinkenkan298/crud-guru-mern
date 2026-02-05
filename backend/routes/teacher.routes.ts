@@ -1,8 +1,8 @@
 import { Router, type Request, type Response } from "express";
 import { logger } from "logger";
 import { asyncHandler } from "middlewares/asyncHandler";
-import { TeacherModel } from "models/teacherModel";
 import { teacherService } from "services/teacher.service";
+import { Agama, Gender } from "types/teacher-type";
 import { errorResponse, successResponse } from "utils/apiResponse";
 import z from "zod";
 
@@ -35,8 +35,8 @@ teacherRoutes.post(
       }),
       email: z.email("Email tidak valid"),
       tempat_lahir: z.string(),
-      jenis_kelamin: z.enum(["MALE", "FEMALE"]),
-      agama: z.enum(["ISLAM", "KRISTEN", "HINDU", "KATOLIK", "BUDDHA"]),
+      jenis_kelamin: z.enum(Gender),
+      agama: z.enum(Agama),
     });
 
     const validatedTeacher = teacherSchema.safeParse(req.body);
@@ -55,9 +55,9 @@ teacherRoutes.post(
       return;
     }
 
-    const teacher = await TeacherModel.findOne({
-      nip: validatedTeacher.data.nip,
-    });
+    const teacher = await teacherService.getTeacherByNip(
+      validatedTeacher.data.nip,
+    );
 
     if (teacher) {
       logger.warn("Teacher already exists");
@@ -70,11 +70,9 @@ teacherRoutes.post(
       return;
     }
 
-    const newTeacher = new TeacherModel({
-      ...validatedTeacher.data,
-    });
-
-    await newTeacher.save();
+    const newTeacher = await teacherService.createTeacher(
+      validatedTeacher.data,
+    );
 
     successResponse({
       res,
@@ -82,6 +80,13 @@ teacherRoutes.post(
       message: "Teacher created successfully",
       statusCode: 201,
     });
+  }),
+);
+
+teacherRoutes.patch(
+  "/:nip",
+  asyncHandler(async (req: Request, res: Response) => {
+    console.log(req.query.nip);
   }),
 );
 
