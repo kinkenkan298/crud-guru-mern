@@ -1,6 +1,7 @@
 import { logger } from "logger";
+import { HttpException } from "utils/httpException";
 import { TeacherModel } from "../models/teacherModel";
-import type { Teacher } from "../types/teacher-type";
+import { type Teacher } from "../types/teacher-type";
 
 class TeacherService {
   async getAllTeachers(): Promise<Teacher[]> {
@@ -30,9 +31,16 @@ class TeacherService {
   async createTeacher(teacher: Teacher): Promise<Teacher> {
     logger.info("Create Teacher");
     try {
+      const existsTeacher = await TeacherModel.findOne({ nip: teacher.nip });
+      if (existsTeacher) {
+        logger.warn("Teacher already exists");
+        throw new HttpException(400, "Teacher already exists");
+      }
+
       const newTeacher = new TeacherModel({
         ...teacher,
       });
+
       await newTeacher.save();
       logger.info("Create Teacher Success");
       return newTeacher;
@@ -50,8 +58,8 @@ class TeacherService {
         teacher,
         {
           new: true,
-          upsert: true,
-        },
+          runValidators: true,
+        }
       );
       logger.info("Update Teacher Success");
       return updatedTeacher;

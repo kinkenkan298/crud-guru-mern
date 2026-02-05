@@ -1,18 +1,17 @@
 meta {
-  name: Created Teacher
+  name: Update Teacher
   type: http
   seq: 3
 }
 
-post {
-  url: {{base_url}}/teachers
+put {
+  url: {{base_url}}/teachers/123456
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "nip": 123433,
     "name": "Sabil Gerung",
     "email": "sabil22@email.com",
     "tempat_lahir": "Bandung",
