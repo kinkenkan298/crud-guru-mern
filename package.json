@@ -4,17 +4,15 @@
   "type": "module",
   "private": true,
   "workspaces": [
-    "frontend",
-    "backend"
+    "apps/*"
   ],
-  "devDependencies": {
-    "@types/bun": "latest"
+  "scripts": {
+    "dev:frontend": "bun run --filter './apps/frontend' dev",
+    "dev:backend": "bun run --filter './apps/backend' dev",
+    "dev": "bun run --filter './apps/*' dev",
+    "build": "bun run --filter './apps/*' build",
+    "preview": "bun run --filter './apps/*' preview",
+    "test": "bun run --filter './apps/*' test"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "@types/cors": "^2.8.19",
-    "cors": "^2.8.6"
-  }
+  "dependencies": {}
 }
