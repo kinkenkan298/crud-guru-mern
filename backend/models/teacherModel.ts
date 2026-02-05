@@ -9,6 +9,7 @@ const TeacherSchema = new Schema<Teacher>({
   nip: {
     type: Number,
     required: true,
+    unique: true,
   },
   tempat_lahir: {
     type: String,
@@ -27,6 +28,7 @@ const TeacherSchema = new Schema<Teacher>({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
 });
 
