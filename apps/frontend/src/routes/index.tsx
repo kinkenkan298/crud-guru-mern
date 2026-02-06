@@ -1,25 +1,17 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { columns } from "@/features/teachers/components/columns";
 import { DataTables } from "@/features/teachers/components/data-table";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { Loader2Icon } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -52,6 +44,14 @@ function App() {
         <CardHeader>
           <CardTitle>Daftar guru</CardTitle>
           <CardDescription>list dari tabel semua guru</CardDescription>
+          <CardAction>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/create">
+                <PlusIcon className="mr-2" />
+                Tambah Guru
+              </Link>
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <DataTables columns={columns} data={teachers.data} />

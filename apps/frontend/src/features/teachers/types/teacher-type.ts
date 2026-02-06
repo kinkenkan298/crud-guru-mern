@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface Teacher {
   nip: number;
   name: string;
@@ -18,3 +20,18 @@ export enum Agama {
   KATOLIK = "KATOLIK",
   BUDDHA = "BUDDHA",
 }
+
+export const teacherSchema = z.object({
+  nip: z
+    .string({ error: "NIP Tidak valid" })
+    .length(6, { error: "NIP harus 6 angka" }),
+  name: z.string({
+    error: "Wajib menggunakan huruf",
+  }),
+  email: z.email("Email tidak valid"),
+  tempat_lahir: z.string(),
+  jenis_kelamin: z.enum(Gender),
+  agama: z.enum(Agama),
+});
+
+export type TeacherSchema = z.infer<typeof teacherSchema>;
