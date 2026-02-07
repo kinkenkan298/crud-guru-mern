@@ -41,7 +41,7 @@ class TeacherService {
   async getAllTeachers(): Promise<Teacher[]> {
     logger.info("Get All Tearchers");
     try {
-      const teachers = await TeacherModel.find();
+      const teachers = await TeacherModel.find().sort({ name: "desc" });
       logger.info("Get All Tearchers Success");
       return teachers;
     } catch (error) {
@@ -124,6 +124,7 @@ class TeacherService {
     logger.info("Delete Teacher");
     try {
       const existsTeacher = await TeacherModel.findOne({ nip });
+
       if (!existsTeacher) {
         logger.warn("Data guru tidak ditemukan");
         throw new HttpException(404, "Data guru tidak ditemukan");
