@@ -15,19 +15,47 @@ import { useAppForm } from "@/hooks/form";
 import { TeacherForm } from "@/features/teachers/components/TeacherForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftCircle } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/create")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const TeacherMutate = useMutation({
+    mutationKey: ["teacher-create"],
+    mutationFn: async (values: TeacherSchema) => {
+      const response = await fetch("http://localhost:3001/v1/teachers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.data.map((e) => e.message).join(", "));
+      }
+
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log("Teacher created:", data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const form = useAppForm({
     defaultValues: {} as TeacherSchema,
     validators: {
       onChange: teacherSchema,
     },
-    onSubmit: async (values) => {
-      console.log(values);
+    onSubmit: async ({ value }) => {
+      await TeacherMutate.mutateAsync(value);
     },
   });
 
@@ -63,11 +91,11 @@ function RouteComponent() {
                 children={({ isFormValid }) => (
                   <Button
                     type="submit"
-                    variant="secondary"
+                    variant="outline"
                     disabled={!isFormValid}
                     className="w-full mt-3"
                   >
-                    Submit
+                    Tambah Guru Baru
                   </Button>
                 )}
               />
