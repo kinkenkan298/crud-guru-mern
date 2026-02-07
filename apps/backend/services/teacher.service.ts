@@ -75,7 +75,7 @@ class TeacherService {
       const existsTeacher = await TeacherModel.findOne({ nip: teacher.nip });
       if (existsTeacher) {
         logger.warn("Teacher already exists");
-        throw new HttpException(400, "Teacher already exists");
+        throw new HttpException(400, "Data guru sudah ada!");
       }
 
       const newTeacher = new TeacherModel({
@@ -125,8 +125,8 @@ class TeacherService {
     try {
       const existsTeacher = await TeacherModel.findOne({ nip });
       if (!existsTeacher) {
-        logger.warn("Teacher not found");
-        throw new HttpException(404, "Teacher not found");
+        logger.warn("Data guru tidak ditemukan");
+        throw new HttpException(404, "Data guru tidak ditemukan");
       }
 
       const deletedTeacher = await TeacherModel.findOneAndDelete({ nip });

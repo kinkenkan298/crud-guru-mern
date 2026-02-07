@@ -6,7 +6,7 @@ import {
   CardAction,
 } from "@/components/ui/card";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   TeacherSchema,
   teacherSchema,
@@ -15,14 +15,17 @@ import { useAppForm } from "@/hooks/form";
 import { TeacherForm } from "@/features/teachers/components/TeacherForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftCircle } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute("/create")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const TeacherMutate = useMutation({
     mutationKey: ["teacher-create"],
     mutationFn: async (values: TeacherSchema) => {
@@ -31,18 +34,29 @@ function RouteComponent() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          nip: Number(values.nip),
+        }),
       });
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.data.map((e) => e.message).join(", "));
+        throw new Error(data.message);
       }
 
       return data;
     },
-    onSuccess: (data) => {
-      console.log("Teacher created:", data);
+    onSuccess: () => {
+      toast.success("Berhasil membuat guru!");
+      queryClient.invalidateQueries({
+        queryKey: ["teachers"],
+      });
+
+      navigate({
+        to: "/",
+        replace: true,
+      });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -61,7 +75,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col justify-center items-center max-w-full">
-      <Card className="w-full">
+      <Card className="w-125">
         <CardHeader>
           <CardTitle>Tambah Guru Baru</CardTitle>
           <CardAction>
@@ -95,6 +109,9 @@ function RouteComponent() {
                     disabled={!isFormValid}
                     className="w-full mt-3"
                   >
+                    {TeacherMutate.isPending && (
+                      <Spinner data-icon="inline-start" />
+                    )}
                     Tambah Guru Baru
                   </Button>
                 )}

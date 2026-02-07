@@ -5,7 +5,7 @@ export const TeacherForm = withForm({
   defaultValues: {} as TeacherSchema,
   render: ({ form }) => {
     return (
-      <div className="grid grid-cols-2 grid-rows-2 gap-2">
+      <div className="grid  gap-3">
         <form.AppField
           name="nip"
           children={(field) => (
