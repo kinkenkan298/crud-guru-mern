@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
+import { useBeingDeleted } from "@/store/delete-dialog-store";
 
 export const columns: ColumnDef<Teacher>[] = [
   {
@@ -72,6 +73,7 @@ export const columns: ColumnDef<Teacher>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const teacher = row.original;
+      const setBeingDeleted = useBeingDeleted((state) => state.setBeingDeleted);
 
       return (
         <DropdownMenu>
@@ -92,7 +94,14 @@ export const columns: ColumnDef<Teacher>[] = [
                 <span>Edit</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                setBeingDeleted({
+                  nip: teacher.nip,
+                  name: teacher.name,
+                })
+              }
+            >
               <Trash2Icon className="text-red-500" />
               <span className=" text-red-500">Delete</span>
             </DropdownMenuItem>

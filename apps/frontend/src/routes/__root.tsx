@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import appCss from "../styles.css?url";
 import { QueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { DeleteDialog } from "@/components/delete-dialog";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -47,6 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Toaster position="top-center" richColors />
+        <DeleteDialog />
         <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
           <Header />
 
