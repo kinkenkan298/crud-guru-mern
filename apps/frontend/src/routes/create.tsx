@@ -1,6 +1,12 @@
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   TeacherSchema,
   teacherSchema,
@@ -8,6 +14,7 @@ import {
 import { useAppForm } from "@/hooks/form";
 import { TeacherForm } from "@/features/teachers/components/TeacherForm";
 import { Button } from "@/components/ui/button";
+import { ArrowLeftCircle } from "lucide-react";
 
 export const Route = createFileRoute("/create")({
   component: RouteComponent,
@@ -29,6 +36,14 @@ function RouteComponent() {
       <Card className="w-full">
         <CardHeader>
           <CardTitle>Tambah Guru Baru</CardTitle>
+          <CardAction>
+            <Button variant="outline" className="mr-2" asChild>
+              <Link to="/">
+                <ArrowLeftCircle />
+                Kembali
+              </Link>
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <form
