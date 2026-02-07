@@ -14,5 +14,8 @@
     "preview": "bun run --filter './apps/*' preview",
     "test": "bun run --filter './apps/*' test"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
 }
