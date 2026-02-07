@@ -29,9 +29,9 @@ export const teacherSchema = z.object({
     error: "Wajib menggunakan huruf",
   }),
   email: z.email("Email tidak valid"),
-  tempat_lahir: z.string(),
-  jenis_kelamin: z.enum(Gender),
-  agama: z.enum(Agama),
+  tempat_lahir: z.string({ error: "Tempat lahir tidak valid" }),
+  jenis_kelamin: z.enum(Gender, { error: "Jenis kelamin tidak valid" }),
+  agama: z.enum(Agama, { error: "Agama tidak valid" }),
 });
 
 export type TeacherSchema = z.infer<typeof teacherSchema>;

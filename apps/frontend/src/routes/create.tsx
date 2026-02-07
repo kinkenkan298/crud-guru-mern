@@ -1,16 +1,13 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup, FieldSet } from "@/components/ui/field";
 import { createFileRoute } from "@tanstack/react-router";
-import { teacherSchema } from "@/features/teachers/types/teacher-type";
+import {
+  TeacherSchema,
+  teacherSchema,
+} from "@/features/teachers/types/teacher-type";
 import { useAppForm } from "@/hooks/form";
+import { TeacherForm } from "@/features/teachers/components/TeacherForm";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/create")({
   component: RouteComponent,
@@ -18,14 +15,7 @@ export const Route = createFileRoute("/create")({
 
 function RouteComponent() {
   const form = useAppForm({
-    defaultValues: {
-      nip: "",
-      name: "",
-      email: "",
-      agama: "",
-      jenis_kelamin: "",
-      tempat_lahir: "",
-    },
+    defaultValues: {} as TeacherSchema,
     validators: {
       onChange: teacherSchema,
     },
@@ -50,57 +40,23 @@ function RouteComponent() {
           >
             <FieldSet>
               <FieldGroup>
-                <form.AppField
-                  name="nip"
-                  children={(field) => (
-                    <field.TextField
-                      label="NIP"
-                      placeholder="Masukan NIP"
-                      type="number"
-                      description="NIP harus berupa angka dan memiliki panjang 6"
-                    />
-                  )}
-                />
-                <form.AppField
-                  name="name"
-                  children={(field) => (
-                    <field.TextField label="Nama" placeholder="Masukan Nama" />
-                  )}
-                />
-                <form.AppField
-                  name="email"
-                  children={(field) => (
-                    <field.TextField
-                      label="Email"
-                      placeholder="Masukan Email"
-                      type="email"
-                    />
-                  )}
-                />
-                <form.AppField
-                  name="tempat_lahir"
-                  children={(field) => (
-                    <field.TextField
-                      label="Tempat Lahir"
-                      placeholder="Masukan Tempat Lahir"
-                    />
-                  )}
-                />
-                <form.AppField
-                  name="jenis_kelamin"
-                  children={(field) => (
-                    <field.SelectField
-                      label="Jenis Kelamin"
-                      data={[
-                        { value: "MALE", label: "Laki-laki" },
-                        { value: "FEMALE", label: "Perempuan" },
-                      ]}
-                      selectLabel="Pilih jenis kelamin"
-                    />
-                  )}
-                />
+                <TeacherForm form={form} />
               </FieldGroup>
             </FieldSet>
+            <form.AppForm>
+              <form.Subscribe
+                children={({ isFormValid }) => (
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    disabled={isFormValid}
+                    className="w-full mt-3"
+                  >
+                    Submit
+                  </Button>
+                )}
+              />
+            </form.AppForm>
           </form>
         </CardContent>
       </Card>

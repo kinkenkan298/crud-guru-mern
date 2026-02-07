@@ -13,15 +13,17 @@ export default function TextField({
 }) {
   const field = useFieldContext<string>();
   const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+
   return (
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
         name={field.name}
-        value={field.state.value}
+        value={field.state.value ?? ""}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
+        aria-invalid={isInvalid}
         {...props}
       />
       {description && <FieldDescription>{description}</FieldDescription>}

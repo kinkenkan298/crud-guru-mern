@@ -38,7 +38,9 @@ export default function SelectField({
         </SelectTrigger>
         <SelectContent>
           {data.map((d, _) => (
-            <SelectItem value={d.value}>{d.label}</SelectItem>
+            <SelectItem key={d.value} value={d.value}>
+              {d.label}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
