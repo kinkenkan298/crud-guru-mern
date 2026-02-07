@@ -30,7 +30,7 @@ export default function SelectField({
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <Select
-        value={state.value}
+        value={state.value ?? ""}
         onValueChange={(value) => handleChange(value as string)}
       >
         <SelectTrigger id={name} onBlur={handleBlur}>

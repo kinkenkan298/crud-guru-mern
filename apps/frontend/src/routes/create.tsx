@@ -64,7 +64,7 @@ function RouteComponent() {
                   <Button
                     type="submit"
                     variant="secondary"
-                    disabled={isFormValid}
+                    disabled={!isFormValid}
                     className="w-full mt-3"
                   >
                     Submit
