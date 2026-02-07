@@ -2,6 +2,40 @@ import { logger } from "logger";
 import { HttpException } from "utils/httpException";
 import { TeacherModel } from "../models/teacherModel";
 import { type Teacher } from "../types/teacher-type";
+import { Agama, Gender } from "types/teacher-type";
+import z, { ZodError } from "zod";
+
+const teacherSchema = z.object({
+  nip: z.number().check((ctx) => {
+    if (ctx.value.toString().length !== 6) {
+      ctx.issues.push({
+        code: "custom",
+        maximum: 6,
+        origin: "number",
+        inclusive: true,
+        message: "NIP harus 6 angka",
+        input: ctx.value,
+      });
+    }
+  }),
+  name: z.string({
+    error: "Wajib menggunakan huruf",
+  }),
+  email: z.email({
+    error: "Email tidak valid",
+  }),
+  tempat_lahir: z.string({
+    error: "Wajib menggunakan huruf",
+  }),
+  jenis_kelamin: z.enum(Gender, {
+    error: "Wajib menggunakan pilihan jenis kelamin",
+  }),
+  agama: z.enum(Agama, {
+    error: "Wajib menggunakan pilihan agama",
+  }),
+});
+
+type TeacherSchema = z.infer<typeof teacherSchema>;
 
 class TeacherService {
   async getAllTeachers(): Promise<Teacher[]> {
@@ -28,9 +62,16 @@ class TeacherService {
     }
   }
 
-  async createTeacher(teacher: Teacher): Promise<Teacher> {
+  async createTeacher(teacher: TeacherSchema): Promise<Teacher> {
     logger.info("Create Teacher");
     try {
+      const validatedTeacher = teacherSchema.safeParse(teacher);
+
+      if (!validatedTeacher.success) {
+        logger.error("Validation teacher failed");
+        throw new ZodError(validatedTeacher.error.issues);
+      }
+
       const existsTeacher = await TeacherModel.findOne({ nip: teacher.nip });
       if (existsTeacher) {
         logger.warn("Teacher already exists");
@@ -50,16 +91,26 @@ class TeacherService {
     }
   }
 
-  async updateTeacher(nip: number, teacher: Teacher): Promise<Teacher | null> {
+  async updateTeacher(
+    nip: number,
+    teacher: Partial<TeacherSchema>,
+  ): Promise<Teacher | null> {
     logger.info("Update Teacher");
     try {
+      const validatedTeacher = teacherSchema.partial().safeParse(teacher);
+
+      if (!validatedTeacher.success) {
+        logger.error("Validation teacher failed");
+        throw new ZodError(validatedTeacher.error.issues);
+      }
+
       const updatedTeacher = await TeacherModel.findOneAndUpdate(
         { nip },
-        teacher,
+        validatedTeacher.data,
         {
           new: true,
           runValidators: true,
-        }
+        },
       );
       logger.info("Update Teacher Success");
       return updatedTeacher;
@@ -72,7 +123,6 @@ class TeacherService {
   async deleteTeacher(nip: number): Promise<Teacher | null> {
     logger.info("Delete Teacher");
     try {
-
       const existsTeacher = await TeacherModel.findOne({ nip });
       if (!existsTeacher) {
         logger.warn("Teacher not found");
