@@ -41,7 +41,7 @@ class TeacherService {
   async getAllTeachers(): Promise<Teacher[]> {
     logger.info("Get All Tearchers");
     try {
-      const teachers = await TeacherModel.find().sort({ name: "desc" });
+      const teachers = await TeacherModel.find().sort({ createdAt: -1 });
       logger.info("Get All Tearchers Success");
       return teachers;
     } catch (error) {
@@ -75,7 +75,7 @@ class TeacherService {
       const existsTeacher = await TeacherModel.findOne({ nip: teacher.nip });
       if (existsTeacher) {
         logger.warn("Teacher already exists");
-        throw new HttpException(400, "Data guru sudah ada!");
+        throw new HttpException(400, "NIP Guru sudah ada!");
       }
 
       const newTeacher = new TeacherModel({
