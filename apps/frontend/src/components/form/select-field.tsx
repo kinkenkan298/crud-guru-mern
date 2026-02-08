@@ -1,13 +1,14 @@
 import { useFieldContext } from "@/hooks/form";
+import React from "react";
 import { Field, FieldDescription, FieldError, FieldLabel } from "../ui/field";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import React from "react";
 
 interface SelectFieldProps {
   label: string;
@@ -23,7 +24,6 @@ export default function SelectField({
   description,
 }: React.ComponentPropsWithRef<"select"> & SelectFieldProps) {
   const { name, state, handleChange, handleBlur } = useFieldContext<string>();
-
   const isInvalid = state.meta.isTouched && !state.meta.isValid;
 
   return (
@@ -37,11 +37,13 @@ export default function SelectField({
           <SelectValue placeholder={selectLabel ? selectLabel : label} />
         </SelectTrigger>
         <SelectContent>
-          {data.map((d, _) => (
-            <SelectItem key={d.value} value={d.value}>
-              {d.label}
-            </SelectItem>
-          ))}
+          <SelectGroup>
+            {data.map((d, _) => (
+              <SelectItem key={d.value} value={d.value}>
+                {d.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
         </SelectContent>
       </Select>
 

@@ -79,7 +79,7 @@ function RouteComponent() {
         <CardHeader>
           <CardTitle>Tambah Guru Baru</CardTitle>
           <CardAction>
-            <Button variant="outline" className="mr-2" asChild>
+            <Button variant="outline" className="mr-2" size="sm" asChild>
               <Link to="/">
                 <ArrowLeftCircle />
                 Kembali

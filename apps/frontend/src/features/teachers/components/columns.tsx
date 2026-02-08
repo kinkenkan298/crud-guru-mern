@@ -1,12 +1,15 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { Teacher } from "@/features/teachers/types/teacher-type";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Teacher } from "@/features/teachers/types/teacher-type";
+import { useBeingDeleted } from "@/store/delete-dialog-store";
+import { Link } from "@tanstack/react-router";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   MarsIcon,
   MoreHorizontal,
@@ -14,9 +17,6 @@ import {
   Trash2Icon,
   VenusIcon,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
-import { Badge } from "@/components/ui/badge";
-import { useBeingDeleted } from "@/store/delete-dialog-store";
 
 export const columns: ColumnDef<Teacher>[] = [
   {
@@ -42,6 +42,11 @@ export const columns: ColumnDef<Teacher>[] = [
     id: "tempat_lahir",
     header: "Tempat Lahir",
     accessorKey: "tempat_lahir",
+  },
+  {
+    id: "agama",
+    header: "Agama",
+    accessorKey: "agama",
   },
   {
     id: "jenis_kelamin",

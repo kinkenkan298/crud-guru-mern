@@ -49,9 +49,15 @@ export const DeleteDialog = () => {
     },
   });
 
-  const handleDeleteTeacher = () => {
+  const handleDeleteTeacher = async () => {
     if (!beingDeleted?.nip) return;
-    deleteMutation.mutate();
+    try {
+      await deleteMutation.mutateAsync();
+    } catch {
+      toast.error("Terjadi kesalahan saat menghapus guru");
+    } finally {
+      setBeingDeleted(null);
+    }
   };
 
   return (

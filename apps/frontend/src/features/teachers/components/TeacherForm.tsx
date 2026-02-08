@@ -51,7 +51,7 @@ export const TeacherForm = withForm({
                 { value: "MALE", label: "Laki-laki" },
                 { value: "FEMALE", label: "Perempuan" },
               ]}
-              selectLabel="Pilih jenis kelamin"
+              selectLabel={field.state.value}
             />
           )}
         />
@@ -59,15 +59,16 @@ export const TeacherForm = withForm({
           name="agama"
           children={(field) => (
             <field.SelectField
-              label="Agama"
+              label="Pilih Agama"
               data={[
                 { value: "ISLAM", label: "Islam" },
                 { value: "KRISTEN", label: "Kristen" },
                 { value: "KATOLIK", label: "Katolik" },
                 { value: "HINDU", label: "Hindu" },
-                { value: "BUDHA", label: "Budha" },
+                { value: "BUDDHA", label: "Buddha" },
+                { value: "KONGHUCU", label: "Konghucu" },
               ]}
-              selectLabel="Pilih Agama"
+              selectLabel={field.state.value}
             />
           )}
         />

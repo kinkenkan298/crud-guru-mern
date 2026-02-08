@@ -17,4 +17,5 @@ export enum Agama {
   HINDU = "HINDU",
   KATOLIK = "KATOLIK",
   BUDDHA = "BUDDHA",
+  KONGHUCU = "KONGHUCU",
 }
